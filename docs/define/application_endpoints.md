@@ -141,7 +141,7 @@ current user can be allowed.
 | ----------------------- | -----------------------------------------------------|
 | X-BIZAPP-TYPEID	 | BizAPP.Runtime.Core.Framework.Utils.RestAPIClientMethods, BizAPP.Runtime.Core.Framework, Version=1.1.0.37, Culture=neutral, PublicKeyToken=5cd91901593ba07f					 |
 | X-BIZAPP-METHOD	 | ChallengeUserId											 |
-| X-BIZAPP-CUSTOMTYPE | true														 |
+| X-BIZAPP-CUSTOMTYPE | true												     |
 
 Other header values are removed for brevity.
 
@@ -221,7 +221,7 @@ Helps to change password after user validation is completed.
 | ----------------------- | -----------------------------------------------------|
 | X-BIZAPP-TYPEID	 | BizAPP.Runtime.Core.Framework.Utils.RestAPIClientMethods, BizAPP.Runtime.Core.Framework, Version=1.1.0.37, Culture=neutral, PublicKeyToken=5cd91901593ba07f					 |
 | X-BIZAPP-METHOD	 | ChangePassword											 |
-| X-BIZAPP-CUSTOMTYPE | true														 |
+| X-BIZAPP-CUSTOMTYPE | true													 |
 
 Other header values are removed for brevity.
 
@@ -238,3 +238,10 @@ Other header values are removed for brevity.
 **Response**
 * 200 - Successful
 * 500 - Internal error occurred, response includes the error message.
+
+### User defined external REST end points
+Similar to platform defined REST end points, users can also define their solution specific end points in separate assemblies for easy maintenance. Those API's can be 
+exposed as REST end points using the same mechanism as platform end points. 
+
+* Change X-BIZAPP-TYPEID to assembly qualified type name of the custom assembly.
+* Change X-BIZAPP-METHOD to the method name defined in the new type.
