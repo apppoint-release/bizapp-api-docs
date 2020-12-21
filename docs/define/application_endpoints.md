@@ -80,7 +80,9 @@ public static IActionResult Echo( ISessionService sessionService, NameValueColle
 
 ## Using API's from Client
 
-All API's defined either in the modeler or framework supported methods can be invoked using any of the clients that allow invoking REST api's.
+All API's defined either in the modeler or framework supported methods can be invoked using any of the clients that allow invoking REST api's. Url to access generic REST endpoints is
+
+**http(s)://[site url]/apihandler.ashx[?query string]**
 
 ### Authentication
 Authentication is required to invoke any api's available. It could be either a simple apikey/secret or HMAC authentication with the headers required. 
@@ -108,7 +110,7 @@ using ( var hmacSHAx = new HMACSHA256( System.Text.Encoding.ASCII.GetBytes( apiS
 }
 ```
 The above code assumes the following
-1. API Key created uses HMAC256 hashing. 
+1. API Key created uses HMAC256 digest mechanism. 
 2. Http method for the request is GET.
 
 If you are using POST, then entire payload needs to be used in place of requestPath. Using the above code, both AUTHDIGEST AND DIGESTEPOCH can be set.
@@ -120,4 +122,119 @@ The payload for the request is normally a json string. This will be passed to th
 All errors use appropriate HTTP error codes. 
 * 401 - Unauthorized.
 * 500 - Internal server error while processing the request. The error message sent back to the client.
-* Any other - Solution methods can return appropriate error codes where required. 
+* Others - Method can return appropriate error codes where required. 
+
+### Platform defined REST end points
+Platform comes with pre-defined REST API end points that provide some common functionality.
+
+#### Get Validation Code
+This API allows custom solutions to implement MFA(Multi Factor Authentication) in any of the flows. For e.g. if a solution requires an approval flow and needs to validate if the
+current user can be allowed.
+
+**Url** : http(s)://[site url]/apihandler.ashx
+
+**HTTP Method** : POST
+
+**Headers**
+
+| Header Name        | Header Value          |
+| ----------------------- | -----------------------------------------------------|
+| X-BIZAPP-TYPEID	 | BizAPP.Runtime.Core.Framework.Utils.RestAPIClientMethods, BizAPP.Runtime.Core.Framework, Version=1.1.0.37, Culture=neutral, PublicKeyToken=5cd91901593ba07f					 |
+| X-BIZAPP-METHOD	 | ChallengeUserId											 |
+| X-BIZAPP-CUSTOMTYPE | true														 |
+
+Other header values are removed for brevity.
+
+**Payload**
+
+The following payload is required to generate a validation code and send to the target user.
+
+```
+{
+    "email":"email@yourcompany.com",
+    "validateUser":true,
+    "authFeature":"ForgotPassword",
+    "templates":["Email"]
+}
+```
+Valid values for **templates** are
+* Email
+* SMS
+* PushNotification
+
+The above values can be specified as an array in any possible combinations.
+
+Valid values for **authFeature** are
+* LoginWeb
+* LoginMobile
+* Signup
+* ForgotPassword
+* Impersonation
+* ApplyStep
+
+**Response**
+* 200 - Successful
+* 500 - Internal error occurred, response includes the error message.
+
+#### Challange User Response
+Helps to validate the user response validation code sent (to user by the previous API). 
+
+**Url** : http(s)://[site url]/apihandler.ashx
+
+**HTTP Method** : POST
+
+**Headers**
+
+| Header Name        | Header Value          |
+| ----------------------- | -----------------------------------------------------|
+| X-BIZAPP-TYPEID	 | BizAPP.Runtime.Core.Framework.Utils.RestAPIClientMethods, BizAPP.Runtime.Core.Framework, Version=1.1.0.37, Culture=neutral, PublicKeyToken=5cd91901593ba07f					 |
+| X-BIZAPP-METHOD	 | ChallengeResponse											 |
+| X-BIZAPP-CUSTOMTYPE | true														 |
+
+Other header values are removed for brevity.
+
+**Payload**
+
+The payload accepts email id and validation response code entered by the user.
+
+```
+{
+    "email":"email@yourcompany.com",
+    "userPromptCookie":"109789"
+}
+```
+
+**Response**
+* 200 - Successful
+* 500 - Internal error occurred, response includes the error message.
+
+#### Change Password
+Helps to change password after user validation is completed.
+
+**Url** : http(s)://[site url]/apihandler.ashx
+
+**HTTP Method** : POST
+
+**Headers**
+
+| Header Name        | Header Value          |
+| ----------------------- | -----------------------------------------------------|
+| X-BIZAPP-TYPEID	 | BizAPP.Runtime.Core.Framework.Utils.RestAPIClientMethods, BizAPP.Runtime.Core.Framework, Version=1.1.0.37, Culture=neutral, PublicKeyToken=5cd91901593ba07f					 |
+| X-BIZAPP-METHOD	 | ChangePassword											 |
+| X-BIZAPP-CUSTOMTYPE | true														 |
+
+Other header values are removed for brevity.
+
+**Payload**
+
+```
+{
+    "email":"email@yourcompany.com",
+    "cookie":"134288",
+    "password":"test@123"
+}
+```
+
+**Response**
+* 200 - Successful
+* 500 - Internal error occurred, response includes the error message.
