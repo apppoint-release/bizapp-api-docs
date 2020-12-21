@@ -18,6 +18,106 @@ It is very important to note that one of the BIG difference with this type of au
 
 The use HMAC authentication a digest is computed using a composite of the URI, request timestamp and some other headers (dependeing on the implementation) using the supplied secret key. The key identifier along with the digest, which is encoded using Base64 is combined and added to the authorisation header.
 
+## Create API Key and Secret
+To create a new API end point key and secret, navigate to System Administration -> API Endpoints.
+Click on Create API Endpoint as shown in the image.
 
+![list api endpoint](..\images\List-api-endpoints.png)
 
+New pop up window appears with some fields pre-filled. 
+* Provider key defaults to *apikey*.
+* Provider secret shows a key. Click on Generate Secret if you want to regenerate the key.
+* HMAC authentication requires the HMAC function to use one of the crypotgraphic hash function.
+* Select *Use Digest* option.
+* By default, API key is active. It can also be turned off after it is created.
 
+![create api endpoint](..\images\create-api-endpoints.png)
+* Click on *Save* button.
+* The newly generated API key appears in the list view.
+
+## Defining API's in Modeler
+API's are defined in the modeler either using *user code* or *code library*. Any API's defined in the modeler is automatically enabled to be accessed from the API end points. 
+In addition, any framework/platform defined end points are also accessible using additional headers.
+
+### API Signatures
+
+One of the following method signature(s) is required in the modeler. All methods must be static and return value can be one of the following.
+
+* IActionResult that returns any of the valid MVC Action Results.
+* Any primitive value or string - Value is returned as is. Additionally content type can be set before returning the value.
+* Non-primitive value such as an instance of an object - It is automatically serialized as json.
+
+**Signature 1**
+
+```
+public static IActionResult Echo( ISessionService sessionService, string payload )
+{
+	// your code goes here.
+}
+```
+
+**Signature 2**
+
+Additional parameters that includes query string values as NameValueCollection.
+
+```
+public static IActionResult Echo( ISessionService sessionService, NameValueCollection headers, string payload )
+{
+	// your code goes here.
+}
+```
+
+**Signature 3**
+
+Additional parameters that includes query string values as NameValueCollection, form variables as NameValueCollection and files collection as HttpFileCollection.
+
+```
+public static IActionResult Echo( ISessionService sessionService, NameValueCollection headers, NameValueCollection formVariables, HttpFileCollection files )
+{
+	// your code goes here.
+}
+```
+
+## Using API's from Client
+
+All API's defined either in the modeler or framework supported methods can be invoked using any of the clients that allow invoking REST api's.
+
+### Authentication
+Authentication is required to invoke any api's available. It could be either a simple apikey/secret or HMAC authentication with the headers required. 
+The following headers are the same for both modes.
+
+| Header Name        | Header Value          |
+| ----------------------- | -----------------------------------------------------|
+| X-BIZAPP-KEY 		 | apikey            										 |
+| X-BIZAPP-SECRET    | KpOAHMNl0qDbNxQhRL1hiiQAZK00lZMp/9oNVrH+w==   			 |
+| X-BIZAPP-TYPEID	 | ESystema478 - Type id of the metadata					 |
+| X-BIZAPP-METHOD	 | Echo - Name of the method either from code library or user code  |
+| X-BIZAPP-AUTHDIGEST| Use digest for authentication							 |
+| X-BIZAPP-DIGESTEPOCH | Hash computed 											 |
+| X-BIZAPP-CUSTOMTYPE | 1 or true - For platform specific API's.				 |
+
+HMAC digest and epoch generation can be generated as shown below.
+
+```
+var ticks = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds( );
+var hmacMessage = $"{ticks}|{requestPath}";
+var hmacDigest = default( string );
+using ( var hmacSHAx = new HMACSHA256( System.Text.Encoding.ASCII.GetBytes( apiSecret ) ) )
+{
+	hmacDigest = Convert.ToBase64String( hmacSHAx.ComputeHash( System.Text.Encoding.ASCII.GetBytes( hmacMessage ) ) );
+}
+```
+The above code assumes the following
+1. API Key created uses HMAC256 hashing. 
+2. Http method for the request is GET.
+
+If you are using POST, then entire payload needs to be used in place of requestPath. Using the above code, both AUTHDIGEST AND DIGESTEPOCH can be set.
+
+### POST body or Payload
+The payload for the request is normally a json string. This will be passed to the static API defined in the solution identified by the type id specified in the header.
+
+### Errors
+All errors use appropriate HTTP error codes. 
+* 401 - Unauthorized.
+* 500 - Internal server error while processing the request. The error message sent back to the client.
+* Any other - Solution methods can return appropriate error codes where required. 
