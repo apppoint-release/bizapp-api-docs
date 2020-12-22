@@ -39,6 +39,19 @@ New pop up window appears with some fields pre-filled.
 API's are defined in the modeler either using *user code* or *code library*. Any API's defined in the modeler is automatically enabled to be accessed from the API end points. 
 In addition, any framework/platform defined end points are also accessible using additional headers.
 
+## Defining API's in external assemblies
+
+API's can be defined in an external assembly and exposed as end points. This will be particularly useful in scenarios where you want to expose an API from 3rd party library
+as public end points. This can be achieved by using any of the method signatures suggested in the above sections. Invoking the end points requires the same headers as Platform defined REST end points. 
+
+| Header Name        | Header Value          |
+| ----------------------- | -----------------------------------------------------|
+| X-BIZAPP-TYPEID	 | Assembly qualified type name 							 |
+| X-BIZAPP-METHOD	 | Name of the static method matching the signature required |
+| X-BIZAPP-CUSTOMTYPE | true												     |
+
+Other header values are removed for brevity.
+
 ### API Signatures
 
 One of the following method signature(s) is required in the modeler. All methods must be static and return value can be one of the following.
@@ -238,10 +251,3 @@ Other header values are removed for brevity.
 **Response**
 * 200 - Successful
 * 500 - Internal error occurred, response includes the error message.
-
-### User defined external REST end points
-Similar to platform defined REST end points, users can also define their solution specific end points in separate assemblies for easy maintenance. Those API's can be 
-exposed as REST end points using the same mechanism as platform end points. 
-
-* Change X-BIZAPP-TYPEID to assembly qualified type name of the custom assembly.
-* Change X-BIZAPP-METHOD to the method name defined in the new type.
