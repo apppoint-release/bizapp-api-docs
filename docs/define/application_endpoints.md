@@ -42,15 +42,7 @@ In addition, any framework/platform defined end points are also accessible using
 ## Defining API's in external assemblies
 
 API's can be defined in an external assembly and exposed as end points. This will be particularly useful in scenarios where you want to expose an API from 3rd party library
-as public end points. This can be achieved by using any of the method signatures suggested in the above sections. Invoking the end points requires the same headers as Platform defined REST end points. 
-
-| Header Name        | Header Value          |
-| ----------------------- | -----------------------------------------------------|
-| X-BIZAPP-TYPEID	 | Assembly qualified type name 							 |
-| X-BIZAPP-METHOD	 | Name of the static method matching the signature required |
-| X-BIZAPP-CUSTOMTYPE | true												     |
-
-Other header values are removed for brevity.
+as public end points. This can be achieved by using any of the method signatures suggested in the following sections. 
 
 ### API Signatures
 
@@ -156,7 +148,7 @@ current user can be allowed.
 | X-BIZAPP-METHOD	 | ChallengeUserId											 |
 | X-BIZAPP-CUSTOMTYPE | true												     |
 
-Other header values are removed for brevity.
+> *Other header values are removed for brevity.*
 
 **Payload**
 
@@ -204,7 +196,7 @@ Helps to validate the user response validation code sent (to user by the previou
 | X-BIZAPP-METHOD	 | ChallengeResponse											 |
 | X-BIZAPP-CUSTOMTYPE | true														 |
 
-Other header values are removed for brevity.
+> *Other header values are removed for brevity.*
 
 **Payload**
 
@@ -236,7 +228,7 @@ Helps to change password after user validation is completed.
 | X-BIZAPP-METHOD	 | ChangePassword											 |
 | X-BIZAPP-CUSTOMTYPE | true													 |
 
-Other header values are removed for brevity.
+> *Other header values are removed for brevity.*
 
 **Payload**
 
@@ -251,3 +243,14 @@ Other header values are removed for brevity.
 **Response**
 * 200 - Successful
 * 500 - Internal error occurred, response includes the error message.
+
+### User defined external REST end points
+Invoking the end points from external assemblies requires the same headers as Platform defined REST end points. The below is an example of using end points from custom assemblies.
+
+| Header Name        | Header Value          |
+| ----------------------- | -----------------------------------------------------|
+| X-BIZAPP-TYPEID	 | Assembly qualified type name 							 |
+| X-BIZAPP-METHOD	 | Name of the static method matching the signature required |
+| X-BIZAPP-CUSTOMTYPE | true												     |
+
+> *Other header values are removed for brevity.*
