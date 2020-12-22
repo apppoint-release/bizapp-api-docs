@@ -8,8 +8,8 @@ Bearer authentication is the only mechanism supported. It requires the user to a
 API calls.
 
 ## Defining API's in Modeler
-BizAPP Modeler allows you to define API's using the industry standard best practices and strategies. API's are defined at an application level and thus helps to logically combine function specific 
-API's and enforce access control.
+BizAPP Modeler allows you to define API's using the industry standard best practices and strategies. API's are defined at an application level and thus helps to logically group function specific 
+API's and enforce access control on top of it.
 
 It is mandatory to set the route template at the application level. The following snapshot shows one such example of setting the base route template URI for all API's defined under an application.
 
@@ -33,3 +33,29 @@ inform clients about a new functionality or a bug fix. Minor and Patch version i
 
 This solution often uses URI routing to point to a specific version of the API. Cache keys are controlled by the URI and any change in the URI path with a different version invalidates
 the cache keys. This also enables clients to cache URI resources without worrying about the impact of newer version of API's.
+
+#### Adding a new endpoint version
+To add a new endpoint version in BizAPP Modeler, navigate to an application and perform the below steps.
+* Right click on APIs node and click on **Add EndpointVersion**.
+* Enter the name in the popup window. If you want to name the versions using different naming strategy, input the same, Otherwise keep the version names same as real versions. For e.g. v1.
+
+![new endpoint version](../images/new-endpoint-version.png)
+
+* Click OK to create a new version.
+* A new window appears on the right side with a new version information.
+* Enter **API Route Template** value in the text box. This is mandatory to indicate the version in URI Path.
+
+![endpoint version route](../images/endpoint-version-route.png)
+
+### API Endpoints
+
+New API endpoints can be created under a specific version. To create an endpoint, right click on the API version and add New APIEndPoint.
+Below image shows a sample endpoint created.
+
+![new-endpoint](../images/new-endpoint.png)
+
+* **API Route Template** is mandatory to set the route for this API.Route needs to be unique across all API's defined under a version.
+* Supported **HttpMethod** types are GET,POST,PUT and DELETE.
+* Supported **Handler Type** are Query, Method and MethodSnippet.
+
+

@@ -87,7 +87,7 @@ public static IActionResult Echo( ISessionService sessionService, NameValueColle
 
 All API's defined either in the modeler or framework supported methods can be invoked using any of the clients that allow invoking REST api's. Url to access generic REST endpoints is
 
-**http(s)://[site url]/apihandler.ashx[?query string]**
+**http(s)://[host]/apihandler.ashx[?query string]**
 
 ### Authentication
 Authentication is required to invoke any api's available. It could be either a simple apikey/secret or HMAC authentication with the headers required. 
@@ -136,7 +136,7 @@ Platform comes with pre-defined REST API end points that provide some common fun
 This API allows custom solutions to implement MFA(Multi Factor Authentication) in any of the flows. For e.g. if a solution requires an approval flow and needs to validate if the
 current user can be allowed.
 
-**Url** : http(s)://[site url]/apihandler.ashx
+**Url** : http(s)://[host]/apihandler.ashx
 
 **HTTP Method** : POST
 
@@ -184,7 +184,7 @@ Valid values for **authFeature** are
 #### Challange User Response
 Helps to validate the user response validation code sent (to user by the previous API). 
 
-**Url** : http(s)://[site url]/apihandler.ashx
+**Url** : http(s)://[host]/apihandler.ashx
 
 **HTTP Method** : POST
 
@@ -216,7 +216,7 @@ The payload accepts email id and validation response code entered by the user.
 #### Change Password
 Helps to change password after user validation is completed.
 
-**Url** : http(s)://[site url]/apihandler.ashx
+**Url** : http(s)://[host]/apihandler.ashx
 
 **HTTP Method** : POST
 
