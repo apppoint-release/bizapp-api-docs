@@ -16,11 +16,11 @@ It is mandatory to set the route template at the application level. The followin
 ![application-routing](../images/application-route.png)
 
 ### API Versioning
-One of the major challenges around expsosing services is handling updates to the API contracts. Clients may not want to update their application when the API changes, hence a versioning
+One of the major challenges around exposing services is handling updates to the API contracts. Clients may not want to update their application when the API changes, hence a versioning
 strategy is crucial. Versioning strategy allows clients to continue to use the existing API and migrate their applications to newer API when they are ready.
 
 #### Versioning through URI Path
-This is one of the most commonly used mechanism to version API's. BizAPP Modeler implictly enforces this mechanism to ensure that URI includes a versioning strategy.
+This is one of the most commonly used mechanism to version API's. BizAPP Modeler implicitly enforces this mechanism to ensure that URI includes a versioning strategy.
 Internal version of the API can use 1.2.3 format, so it looks like as follows.
 
 ![api version](../images/api-versioning.png)
@@ -101,7 +101,7 @@ For more information, refer to [Web API Conventions](https://docs.microsoft.com/
 	
   In parameter attributes :-
 	* **[FromServices]** attribute is used to decorate BizAPP specific services required for execution. Valid services supported are
-	    * *IParameterCacheWrapperService* - Used to get rule and parameter values.
+	    * *IParameterCacheWrapperService* - Provides access to rule and parameter values.
 		* *IQueryExecutionService* - Provides API's to execute BizAPP QueryObject and BSQL queries for DQL and DML statements.
 		* *ISessionServiceWrapperService* - Provides API's to give access to underlying ISessionService API interface.
 	* Model Bindings
