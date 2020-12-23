@@ -54,7 +54,7 @@ One of the following method signature(s) is required in the modeler. All methods
 
 **Signature 1**
 
-```
+```csharp
 public static IActionResult Echo( ISessionService sessionService, string payload )
 {
 	// your code goes here.
@@ -65,7 +65,7 @@ public static IActionResult Echo( ISessionService sessionService, string payload
 
 Additional parameters that includes query string values as NameValueCollection.
 
-```
+```csharp
 public static IActionResult Echo( ISessionService sessionService, NameValueCollection headers, string payload )
 {
 	// your code goes here.
@@ -76,7 +76,7 @@ public static IActionResult Echo( ISessionService sessionService, NameValueColle
 
 Additional parameters that includes query string values as NameValueCollection, form variables as NameValueCollection and files collection as HttpFileCollection.
 
-```
+```csharp
 public static IActionResult Echo( ISessionService sessionService, NameValueCollection headers, NameValueCollection formVariables, HttpFileCollection files )
 {
 	// your code goes here.
@@ -105,7 +105,7 @@ The following headers are the same for both modes.
 
 HMAC digest and epoch generation can be generated as shown below.
 
-```
+```csharp
 var ticks = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds( );
 var hmacMessage = $"{ticks}|{requestPath}";
 var hmacDigest = default( string );
@@ -154,7 +154,7 @@ current user can be allowed.
 
 The following payload is required to generate a validation code and send to the target user.
 
-```
+```json
 {
     "email":"email@yourcompany.com",
     "validateUser":true,
@@ -202,7 +202,7 @@ Helps to validate the user response validation code sent (to user by the previou
 
 The payload accepts email id and validation response code entered by the user.
 
-```
+```json
 {
     "email":"email@yourcompany.com",
     "userPromptCookie":"109789"

@@ -52,10 +52,40 @@ To add a new endpoint version in BizAPP Modeler, navigate to an application and 
 New API endpoints can be created under a specific version. To create an endpoint, right click on the API version and add New APIEndPoint.
 Below image shows a sample endpoint created.
 
-![new-endpoint](../images/new-endpoint.png)
+![new-endpoint](../images/endpoint-http-methods.png)
 
 * **API Route Template** is mandatory to set the route for this API.Route needs to be unique across all API's defined under a version.
-* Supported **HttpMethod** types are GET,POST,PUT and DELETE.
-* Supported **Handler Type** are Query, Method and MethodSnippet.
+* Supported **HttpMethod** verbs are GET,POST,PUT and DELETE.
+* Supported **Handler Types** are QueryResult, Method and Method Snippet.
+
+Every endpoint defined in the modeler is transformed into equivalent executable code on the fly, thus eliminating the need for compilation and deployment complexities. It applies to 
+all **HandlerType** modes supported.
+
+#### API using query result
+
+In most of the cases, an API is created to expose information from the queries executed internally. The results from the query is concise and can be exposed as is to the end users without going through any data obfuscation. In such cases, BizAPP Modeler makes it easy for developers to expose the queries that are already defined in the solution.
+
+To create a new Endpoint using a query,
+* Create a new API Endpoint.
+* Select **handlerType** as Query.
+* Select a query by clicking on ... button.
+
+![endpoint-using-query](../images/endpoint-using-query.png)
+
+#### API using code (Method and MethodSnippet)
+
+For advanced developers that want to make use of ASP.NET Core features to define methods and decorate them, both **Method** and **MethodSnippet** provide an opportunity to control 
+request and response parameters. 
+
+As the name suggests **Method** includes a complete signature of the method that would be exposed as an Endpoint. **MethodSnippet** only has the body of the code excluding the method definition.
+
+**Anatomy of an API Method**
+
+![new-endpoint-method](../images/new-endpoint.png)
+
+
+
+
+
 
 
