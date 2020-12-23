@@ -54,7 +54,7 @@ Below image shows a sample endpoint created.
 
 ![new-endpoint](../images/endpoint-http-methods.png)
 
-* **API Route Template** is mandatory to set the route for this API.Route needs to be unique across all API's defined under a version.
+* **API Route Template** is mandatory to set the route for this API.Route needs to be unique across all APIs defined under a version.
 * Supported **HttpMethod** verbs are GET,POST,PUT and DELETE.
 * Supported **Handler Types** are QueryResult, Method and Method Snippet.
 
@@ -85,7 +85,7 @@ As the name suggests **Method** includes a complete signature of the method that
 
 - **Web API Conventions for API Documentation**
 
-[Swagger](https://swagger.io) is an Interface Description Language for describing RESTful API's expressed using JSON. Any API methods defined in BizAPP Modeler is automatically wrapped inside controller actions and decorated with attributes required.
+[Swagger](https://swagger.io) is an Interface Description Language for describing RESTful API expressed using JSON. Any API methods defined in BizAPP Modeler is automatically wrapped inside controller actions and decorated with attributes required.
 
 To enable documentation on the actions, ProducesResponseType Attribute is typically used to indicate the response types supported by the method actions. This serves as a documentation to depict the request and response types supported by the method actions.
 
@@ -95,24 +95,25 @@ For more information, refer to [Web API Conventions](https://docs.microsoft.com/
 - **Signature**
 
   Return type :- 
-	* *ActionResult* or *ActionResult<T>* for synchrounous actions.
-	* *Task<ActionResult>* or *Task<ActionResult<T>>* for asynchrounous actions.
+	* *ActionResult* or *ActionResult&lt;T&gt;* for synchrounous actions.
+	* *Task&lt;ActionResult&gt;* or *Task&lt;ActionResult&lt;T&gt;&gt;* for asynchrounous actions.
   <br/><br/>For more information, refer to [Action Return Types](https://docs.microsoft.com/en-us/aspnet/core/web-api/action-return-types?view=aspnetcore-5.0)
 	
-  In parameter attributes :-
-	* **[FromServices]** attribute is used to decorate BizAPP specific services required for execution. Valid services supported are
+  In parameters :-
+	* Service Bindings - *[FromServices]* attribute is used to decorate BizAPP specific services required for execution.
 	    * *IParameterCacheWrapperService* - Provides access to rule and parameter values.
 		* *IQueryExecutionService* - Provides API's to execute BizAPP QueryObject and BSQL queries for DQL and DML statements.
 		* *ISessionServiceWrapperService* - Provides API's to give access to underlying ISessionService API interface.
-	* Model Bindings
+	
+	* Model Bindings - Below attributes are used to bind to the incoming request.
 		* *[FromQuery]* - Gets values from the query string.
 		* *[FromBody]* - Gets values from the request body.
-		* *[FromHeader]* -  Gets values from HTTP headers.
+		* *[FromHeader]* - Gets values from HTTP headers.
 		* *[FromForm]* - Gets values from posted form fields.
 		* *[FromRoute]* - Gets values from route data.
 	<br/><br/>For more information, refer to [Model Binding in ASP.NET Core](https://docs.microsoft.com/en-us/aspnet/core/mvc/models/model-binding?view=aspnetcore-5.0)
 	
-	* Model Validation
+	* Model Validation - Below attributes are supported at parameter or field or property levels.
 		* *[Required]* - Validates that the field is not null. Swagger also uses this attribute to indicate the fields that are mandatory in the request payload.
 		* *[CreditCard]* - Validates that the property has a credit card format. Requires jQuery Validation Additional Methods.
 		* *[Compare]* - Validates that two properties in a model match.
