@@ -83,8 +83,51 @@ As the name suggests **Method** includes a complete signature of the method that
 
 ![new-endpoint-method](../images/new-endpoint.png)
 
+- **Web API Conventions for API Documentation**
+
+[Swagger](https://swagger.io) is an Interface Description Language for describing RESTful API's expressed using JSON. Any API methods defined in BizAPP Modeler is automatically wrapped inside controller actions and decorated with attributes required.
+
+To enable documentation on the actions, ProducesResponseType Attribute is typically used to indicate the response types supported by the method actions. This serves as a documentation to depict the request and response types supported by the method actions.
+
+For more information, refer to [Web API Conventions](https://docs.microsoft.com/en-us/aspnet/core/web-api/advanced/conventions?view=aspnetcore-5.0)
 
 
+- **Signature**
+
+  Return type :- 
+	* *ActionResult* or *ActionResult<T>* for synchrounous actions.
+	* *Task<ActionResult>* or *Task<ActionResult<T>>* for asynchrounous actions.
+	For more information, refer to [Action Return Types](https://docs.microsoft.com/en-us/aspnet/core/web-api/action-return-types?view=aspnetcore-5.0)
+	
+  In parameter attributes :-
+	* **[FromServices]** attribute is used to decorate BizAPP specific services required for execution. Valid services supported are
+	    * *IParameterCacheWrapperService* - Used to get rule and parameter values.
+		* *IQueryExecutionService* - Provides API's to execute BizAPP QueryObject and BSQL queries for DQL and DML statements.
+		* *ISessionServiceWrapperService* - Provides API's to give access to underlying ISessionService API interface.
+	* Model Bindings
+		* *[FromQuery]* - Gets values from the query string.
+		* *[FromBody]* - Gets values from the request body.
+		* *[FromHeader]* -  Gets values from HTTP headers.
+		* *[FromForm]* - Gets values from posted form fields.
+		* *[FromRoute]* - Gets values from route data.
+	<br/><br/>For more information, refer to [Model Binding in ASP.NET Core](https://docs.microsoft.com/en-us/aspnet/core/mvc/models/model-binding?view=aspnetcore-5.0)
+	* Model Validation
+		* *[Required]* - Validates that the field is not null. Swagger also uses this attribute to indicate the fields that are mandatory in the request payload.
+		* *[CreditCard]* - Validates that the property has a credit card format. Requires jQuery Validation Additional Methods.
+		* *[Compare]* - Validates that two properties in a model match.
+		* *[EmailAddress]* - Validates that the property has an email format.
+		* *[Phone]* - Validates that the property has a telephone number format.
+		* *[Range]* - Validates that the property value falls within a specified range.
+		* *[RegularExpression]* - Validates that the property value matches a specified regular expression.
+		* *[StringLength]* - Validates that a string property value doesn't exceed a specified length limit.
+		* *[Url]* - Validates that the property has a URL format.
+		* *[Remote]* - Validates input on the client by calling an action method on the server.
+	<br /><br />The built-in attributes can be used for model validations also. For more information, refer to [System.ComponentModel.DataAnnotations](https://docs.microsoft.com/en-us/aspnet/core/mvc/models/validation?view=aspnetcore-5.0)
+	
+- **Method Body**
+  * Logger is the property auto injected to the controller. This can be used to write logs and debug execution issues in the code.
+  * Other properties and methods from [ControllerBase](https://docs.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.mvc.controllerbase?view=aspnetcore-5.0) base class can be used.
+  
 
 
 

@@ -76,7 +76,7 @@ public static IActionResult Echo( ISessionService sessionService, NameValueColle
 
 Additional parameters that includes query string values as NameValueCollection, form variables as NameValueCollection and files collection as HttpFileCollection.
 
-```c#
+```csharp
 public static IActionResult Echo( ISessionService sessionService, NameValueCollection headers, NameValueCollection formVariables, HttpFileCollection files )
 {
 	// your code goes here.
@@ -105,7 +105,7 @@ The following headers are the same for both modes.
 
 HMAC digest and epoch generation can be generated as shown below.
 
-```cs
+```csharp
 var ticks = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds( );
 var hmacMessage = $"{ticks}|{requestPath}";
 var hmacDigest = default( string );
