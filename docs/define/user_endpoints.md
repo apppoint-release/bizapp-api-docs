@@ -97,7 +97,7 @@ For more information, refer to [Web API Conventions](https://docs.microsoft.com/
   Return type :- 
 	* *ActionResult* or *ActionResult<T>* for synchrounous actions.
 	* *Task<ActionResult>* or *Task<ActionResult<T>>* for asynchrounous actions.
-	For more information, refer to [Action Return Types](https://docs.microsoft.com/en-us/aspnet/core/web-api/action-return-types?view=aspnetcore-5.0)
+  <br/><br/>For more information, refer to [Action Return Types](https://docs.microsoft.com/en-us/aspnet/core/web-api/action-return-types?view=aspnetcore-5.0)
 	
   In parameter attributes :-
 	* **[FromServices]** attribute is used to decorate BizAPP specific services required for execution. Valid services supported are
@@ -111,6 +111,7 @@ For more information, refer to [Web API Conventions](https://docs.microsoft.com/
 		* *[FromForm]* - Gets values from posted form fields.
 		* *[FromRoute]* - Gets values from route data.
 	<br/><br/>For more information, refer to [Model Binding in ASP.NET Core](https://docs.microsoft.com/en-us/aspnet/core/mvc/models/model-binding?view=aspnetcore-5.0)
+	
 	* Model Validation
 		* *[Required]* - Validates that the field is not null. Swagger also uses this attribute to indicate the fields that are mandatory in the request payload.
 		* *[CreditCard]* - Validates that the property has a credit card format. Requires jQuery Validation Additional Methods.
@@ -125,8 +126,8 @@ For more information, refer to [Web API Conventions](https://docs.microsoft.com/
 	<br /><br />The built-in attributes can be used for model validations also. For more information, refer to [System.ComponentModel.DataAnnotations](https://docs.microsoft.com/en-us/aspnet/core/mvc/models/validation?view=aspnetcore-5.0)
 	
 - **Method Body**
-  * Logger is the property auto injected to the controller. This can be used to write logs and debug execution issues in the code.
-  * Other properties and methods from [ControllerBase](https://docs.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.mvc.controllerbase?view=aspnetcore-5.0) base class can be used.
+  * *Logger* is the property auto injected to the controller. This can be used to write logs and debug execution issues in the code.
+  * Other properties and methods from [ControllerBase](https://docs.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.mvc.controllerbase?view=aspnetcore-5.0) base class is supported.
   
 
 
