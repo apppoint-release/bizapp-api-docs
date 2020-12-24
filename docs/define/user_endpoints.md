@@ -130,7 +130,27 @@ For more information, refer to [Web API Conventions](https://docs.microsoft.com/
   * *Logger* is the property auto injected to the controller. This can be used to write logs and debug execution issues in the code.
   * Other properties and methods from [ControllerBase](https://docs.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.mvc.controllerbase?view=aspnetcore-5.0) base class is supported.
   
+- **References**
 
+  Your code may need additional libraries to implement the business logic. You can include additional assemblies by adding the names under *User Library References*. 
+  Any namespaces can be added under *NameSpaces*.
+  
+  ![endpoint-references](../images/endpoint-references.png)
 
+-  **Security**
 
+   Any API created may have to be secured from unauthorized access. BizAPP supports the following to secure APIs from being accessed by unauthorized users.
+   
+	* *Authentication* - Enforces the identity of the user. BizAPP uses/supports Bearer authentication for all API calls.
+	* *Authorization* - Helps to decide whether an user is allowed to perform an action. BizAPP allows authorization using its built-in roles and responsibility models (RBAC).
+	* Modes supported for authorization.
+	  * Anonymous - Allows open access to API for all users as if it were public.
+	  * Requires Login - Uses Bearer Authentication token to enforce access.
+	  * Responsibility - In addition to *Bearer token*, further access control can be defined using responsibilities. This restricts access to the actions an user can perform.
+  
+  ![endpoint-references](../images/endpoint-security.png)
+	
+- **Disabling an API**	
 
+  By default, all APIs defined in the modeler are marked active. If you want this endpoint to be inaccessible, then it can be marked inactive. This will force the runtime to reload
+  endpoints and will not be part of the routes.
