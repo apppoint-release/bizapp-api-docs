@@ -142,7 +142,7 @@ For more information, refer to [Web API Conventions](https://docs.microsoft.com/
    Any API created may have to be secured from unauthorized access. BizAPP supports the following to secure APIs from being accessed by unauthorized users.
    
 	* *Authentication* - Enforces the identity of the user. BizAPP uses/supports Bearer authentication for all API calls.
-	* *Authorization* - Helps to decide whether an user is allowed to perform an action. BizAPP allows authorization using its built-in roles and responsibility models (RBAC).
+	* *Authorization* - Helps to decide whether an user is allowed to perform an action. BizAPP supports enhanced authorization using its built-in roles and responsibility models (RBAC).
 	* Modes supported for authorization.
 	  * Anonymous - Allows open access to API for all users as if it were public.
 	  * Requires Login - Uses Bearer Authentication token to enforce access.
@@ -154,3 +154,267 @@ For more information, refer to [Web API Conventions](https://docs.microsoft.com/
 
   By default, all APIs defined in the modeler are marked active. If you want this endpoint to be inaccessible, then it can be marked inactive. This will force the runtime to reload
   endpoints and will not be part of the routes.
+  
+## Swagger Documentation
+
+This section assumes that you have BizAPP.APIHost service is setup and running. Please refer to [BizAPP Installation](https://apppoint-release.github.io/bizapp-docs/#/InstallBizAPP) for the first time setup instructions.
+
+Once you have the service up and running with correct enterprises configured, navigate to [BizAPP API Endpoints](http(s)://[host]:9798/api-docs/index.html). It shows the APIs as shown below.
+
+![Swagger api](../images/swagger-docs.png)
+
+It lists all APIs defined in the BizAPP Modeler in addition to system enabled built-in endpoints for authentication and diagnostics.
+
+## Using API's from Client
+
+All API's defined either in the modeler or built-in actions can be accessed using any of the clients that allow invoking REST api's. Url to access REST endpoints is
+
+**http(s)://[host]:9798/[request uri]**
+
+> **Host** - Name of the host or site.
+> <br />**Request Uri** - This is the request uri to access the API. This can be copied from swagger API endpoints. For e.g. /api/casemgmt/v1/tickets/my
+
+### Authentication
+
+BizAPP enforces Bearer authentication for accessing APIs defined in the modeler. To acquire a token, invoke the following built-in endpoint.
+
+URL: **http(s)://[host]:9798/api/account/login**
+
+HTTP Method: POST
+
+Request Payload/Body: 
+```json
+{
+	"Username": "user",
+    "Password": "password"
+}
+```
+Response :
+* 200 - Successful response. The response includes a Bearer token.
+* 400 - Unauthorized if either username or password is incorrect.
+
+## Tracking request and response
+
+Tracking request and response is one of the most important tools in the hands of developers. Not only this helps them to understand myriad issues in the code, it also helps them in understanding
+the patterns that lead to an error and how a particular API or feature is used. 
+
+### Enable Tracking
+
+By default, this feature is turned off and can be enabled by setting "EnableRequestResponseTracing" flag to true in APIHost\appsettings.json. 
+In addition, appsettings.logging.json file need changes to enable SQL Server tracing. 
+
+The sample json shows both SQL and Console logging enabled. Replace connection string with appropriate values. The appsettings for logging can be downloaded from [here](../files/appsettings.logging.json)
+
+```json
+{
+	"Logging": {
+		"LogLevel": {
+			"Default": "Debug"
+		}
+	},
+	"AllowedHosts": "*",
+	"Serilog": {
+		"Using": [ "Serilog.Exceptions", "Serilog", "Serilog.Sinks.Console", "Serilog.Sinks.ApplicationInsights", "Serilog.Sinks.MSSqlServer" ],
+		"MinimumLevel": {
+			"Default": "Debug",
+			"Override": {
+				"System": "Debug",
+				"Microsoft": "Debug"
+			}
+		},
+		"WriteTo": [
+			{
+				"Name": "Async",
+				"Args": {
+					"configure": [
+						{
+							"Name": "Console",
+							"Args": {
+								"restrictedToMinimumLevel": "Debug"
+							}
+						}
+					]
+				}
+			},
+			{
+				"Name": "Logger",
+				"Args": {
+				  "configureLogger": {
+					"Filter": [
+					  {
+						"Name": "ByIncludingOnly",
+						"Args": {
+						  "expression": "StartsWith(SourceContext, 'BizAPP.Middleware.RequestResponseLoggingMiddleware')"
+						}
+					  }
+					],
+					"WriteTo": [
+					  {
+						"Name": "MSSqlServer",
+						"Args": {
+								  "connectionString": "your connection string",
+								  "sinkOptionsSection": {
+									"tableName": "restapiaudit",
+									"autoCreateSqlTable": false,
+									"batchPostingLimit": 1000,
+									"period": "0.00:00:30"
+								  },
+								  "primaryKeyColumnName": "UniqueId",
+								  "restrictedToMinimumLevel": "Information",
+								  "columnOptionsSection": {
+										"disableTriggers": true,
+										"removeStandardColumns": [ "TimeStamp", "Id", "MessageTemplate", "Level", "Message", "Exception", "Properties" ],
+										"additionalColumns": [
+                                            {
+                                                "ColumnName": "requestid",
+                                                "DataType": "nvarchar",
+                                                "DataLength": 32,
+                                                "AllowNull": false,
+                                                "PropertyName": "RequestId"
+                                            },
+                                            {
+                                                "ColumnName": "requestmethod",
+                                                "DataType": "nvarchar",
+                                                "DataLength": 7,
+                                                "AllowNull": false,
+                                                "PropertyName": "RequestMethod"
+                                            },
+                                            {
+                                                "ColumnName": "requestpayload",
+                                                "DataType": "nvarchar",
+                                                "DataLength": -1,
+                                                "AllowNull": true,
+                                                "PropertyName": "RequestPayload"
+                                            },
+                                            {
+                                                "ColumnName": "requestpath",
+                                                "DataType": "nvarchar",
+                                                "DataLength": 1024,
+                                                "AllowNull": false,
+                                                "PropertyName": "RequestPath"
+                                            },
+                                            {
+                                                "ColumnName": "responsestatus",
+                                                "DataType": "int",
+                                                "AllowNull": true,
+                                                "PropertyName": "StatusCode"
+                                            },
+                                            {
+                                                "ColumnName": "responsebody",
+                                                "DataType": "nvarchar",
+                                                "DataLength": -1,
+                                                "AllowNull": true,
+                                                "PropertyName": "Response"
+                                            },
+                                            {
+                                                "ColumnName": "machine",
+                                                "DataType": "nvarchar",
+                                                "DataLength": 30,
+                                                "AllowNull": false,
+                                                "PropertyName": "MachineName"
+                                            },
+                                            {
+                                                "ColumnName": "exception",
+                                                "DataType": "nvarchar",
+                                                "DataLength": -1,
+                                                "AllowNull": true,
+                                                "PropertyName": "ExceptionMsg"
+                                            },
+                                            {
+                                                "ColumnName": "sourceapplication",
+                                                "DataType": "nvarchar",
+                                                "DataLength": 100,
+                                                "AllowNull": true,
+                                                "PropertyName": "Application"
+                                            },
+                                            {
+                                                "ColumnName": "createdon",
+                                                "DataType": "datetime",
+                                                "AllowNull": true,
+                                                "PropertyName": "CreatedOn"
+                                            },
+                                            {
+                                                "ColumnName": "lastmodifiedon",
+                                                "DataType": "datetime",
+                                                "AllowNull": false,
+                                                "PropertyName": "LastModifiedOn"
+                                            },
+                                            {
+                                                "ColumnName": "uniqueid",
+                                                "DataType": "nvarchar",
+                                                "DataLength": 50,
+                                                "AllowNull": false,
+                                                "PropertyName": "UniqueId"
+                                            },
+                                            {
+                                                "ColumnName": "enterpriseid",
+                                                "DataType": "nvarchar",
+                                                "DataLength": 50,
+                                                "AllowNull": false,
+                                                "PropertyName": "EnterpriseId"
+                                            },
+                                            {
+                                                "ColumnName": "state",
+                                                "DataType": "nvarchar",
+                                                "DataLength": 50,
+                                                "AllowNull": false,
+                                                "PropertyName": "State"
+                                            },
+                                            {
+                                                "ColumnName": "displayname",
+                                                "DataType": "nvarchar",
+                                                "DataLength": 50,
+                                                "AllowNull": true,
+                                                "PropertyName": "DisplayName"
+                                            },
+                                            {
+                                                "ColumnName": "version",
+                                                "DataType": "int",
+                                                "AllowNull": false,
+                                                "PropertyName": "Version"
+                                            },
+                                            {
+                                                "ColumnName": "tid",
+                                                "DataType": "int",
+                                                "AllowNull": false,
+                                                "PropertyName": "Tid"
+                                            },
+                                            {
+                                                "ColumnName": "objecttype",
+                                                "DataType": "nvarchar",
+                                                "DataLength": 50,
+                                                "AllowNull": false,
+                                                "PropertyName": "ObjectType"
+                                            },
+                                            {
+                                                "ColumnName": "user",
+                                                "DataType": "nvarchar",
+                                                "DataLength": 50,
+                                                "AllowNull": true,
+                                                "PropertyName": "User"
+                                            }
+                                        ]
+									}
+								}
+					  }
+					]
+				  }
+				}
+			}
+		],
+		"Enrich": [ "FromLogContext", "WithExceptionDetails" ],
+		"Properties": {
+			"ObjectType": "ESYSwmgj76nuognk5ibkl",
+			"Version": 0,
+			"State": "Started"
+		}
+	}
+}
+```
+
+After enabling appsettings.logging.json file with above json, restart *API Host* service to enable request and response tracking. All audits are written to *restapiaudit* table, a view of this table 
+is enabled from System Administration.
+
+> Do not replace values other than connection string as it can affect the way audits are written to restapiaudit table.
+
+
