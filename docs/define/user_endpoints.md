@@ -203,7 +203,7 @@ the patterns that lead to an error and how a particular API or feature is used.
 By default, this feature is turned off and can be enabled by setting "EnableRequestResponseTracing" flag to true in APIHost\appsettings.json. 
 In addition, appsettings.logging.json file need changes to enable SQL Server tracing. 
 
-The sample json shows both SQL and Console logging enabled. Replace connection string with appropriate values. The appsettings for logging can be downloaded from [here](../files/appsettings.logging.json)
+The sample json shows both SQL and Console logging enabled. Replace connection string with appropriate values. The appsettings for logging can be downloaded from [here](https://github.com/apppoint-release/bizapp-api-docs/blob/master/docs/files/appsettings.logging.json)
 
 ```json
 {
