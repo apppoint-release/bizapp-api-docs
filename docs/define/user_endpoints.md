@@ -417,4 +417,43 @@ is enabled from System Administration.
 
 > Do not replace values other than connection string as it can affect the way audits are written to restapiaudit table.
 
+## Response Caching
 
+Response caching reduces the number of requests a client or proxy makes to a web server. Response caching also reduces the amount of work the web server performs to generate a response. 
+Response caching is controlled by headers that specify how you want client, proxy, and middleware to cache responses.
+
+### Distributed Cache
+
+By default, distributed caching is supported by the framework. It supports Redis as the distributed caching provider. The framework also injects *DistributedCache* to the controller constructor.
+ControllerBaseEx exposes a protected member which is set to the value injected. It can be accessed by variable *_cache*. 
+
+#### ControllerBaseEx methods
+
+This class is the default base class for any dynamically generated code. It has the following methods.
+
+Async method that helps in either getting a value or adding it when not exists.
+
+```cs
+protected Task<T> GetOrAddToCacheAsync<T>( string key, Func<Task<T>> callback = null, TimeSpan? slidingTimeout = null ) where T : class;
+```
+
+Method that performs the same as above except that it is synchrounous in nature.
+
+```cs
+protected T GetOrAddToCache<T>( string key, Func<T> callback = null, TimeSpan? slidingTimeout = null ) where T : class;
+```
+
+#### Configuration
+
+Redis configuration must be setup in order for the distributed cache to work. It is available in *appsettings.json* file.
+
+> "RedisResponseCacheConfiguration": "127.0.0.1:9035,defaultDatabase=12",
+
+It accepts the standard values supported by [Redis Connection String](https://stackexchange.github.io/StackExchange.Redis/Configuration.html)
+
+#### Validation
+
+Once redis connection is setup and your code is using the API's, the values should get stored in the cache. You can use any standard redis tools to connect and validate few key values
+to make sure cache is working fine. 
+
+The response times would show a signiticantly a lower value indicating that the response directly comes from the cache and not from the application layer.
