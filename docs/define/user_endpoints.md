@@ -457,3 +457,44 @@ Once redis connection is setup and your code is using the API's, the values shou
 to make sure cache is working fine. 
 
 The response times would show a signiticantly a lower value indicating that the response directly comes from the cache and not from the application layer.
+
+### Client IP Filtering
+
+Client IP filtering allows incoming requests to be either allowed or denied. The framework supports only allows Whitelisting of IP addresses that are granted access. Any non matching ones are denied.
+
+#### Configuration
+
+Enterprise specific whitelisted IP addresses must be setup, if the application needs to enforce it. It needs to be setup in *appsettings.json* file.
+
+```json
+"EnterpriseWhiteListedIps": 
+{
+	"enterprise name1": [ "::1", "127.0.0.1" ],
+	"enterprise name2": [ "::1", "127.0.0.1" ]
+}
+```
+
+#### Applying the filter
+
+Whitelisting is not enabled by default, but can be applied either at the controller level or on the methods/actions. The below attribute needs to be decorated on the method.
+
+```cs
+[ServiceFilter( typeof( BizAPP.Filters.ClientIPAddressActionFilter ) )]
+```
+
+**Example**
+The below code shows applying the filter on a particular action/method.
+
+```cs 
+[HttpGet( "categories" )]
+[ProducesResponseType( 200, Type = typeof( SuccessResult<IEnumerable<Common.Models.Category>> ) )]
+[ServiceFilter( typeof( BizAPP.Filters.ClientIPAddressActionFilter ) )]
+public async Task<ActionResult> GetCategories( [FromServices] IParameterCacheWrapperService parameterCacheWrapper, 
+	[FromQuery] int? start = null, 
+	[FromQuery] int? count = null, 
+	[FromQuery] string filter = null,
+	[FromQuery] string q = null,
+	[FromQuery] string sort = null ) 
+	{
+	}
+```
