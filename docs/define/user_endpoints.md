@@ -434,7 +434,7 @@ This class is the default base class for any dynamically generated code. It has 
 Async method that helps in either getting a value or adding it when not exists.
 
 ```cs
-protected Task<T> GetOrAddToCacheAsync<T>( string key, Func<Task<T>> callback = null, TimeSpan? slidingTimeout = null ) where T : class;
+protected async Task<T> GetOrAddToCacheAsync<T>( string key, Func<Task<T>> callback = null, TimeSpan? slidingTimeout = null ) where T : class;
 ```
 
 Method that performs the same as above except that it is synchrounous in nature.
@@ -442,6 +442,16 @@ Method that performs the same as above except that it is synchrounous in nature.
 ```cs
 protected T GetOrAddToCache<T>( string key, Func<T> callback = null, TimeSpan? slidingTimeout = null ) where T : class;
 ```
+
+Async methods for individual cache key removal or flushing all keys.
+
+```cs
+protected async Task RemoveFromCacheAsync( string key );
+
+protected async Task FlushCacheAsync( );
+```
+
+Synchronous counterparts exist to perform the above operations.
 
 #### Configuration
 
